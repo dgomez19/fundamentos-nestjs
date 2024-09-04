@@ -7,11 +7,17 @@ import {
   Body,
   Put,
   Delete,
+  HttpStatus,
+  HttpCode,
+  Res,
 } from '@nestjs/common';
+
+import { Response } from 'express';
 
 @Controller('products')
 export class ProductsController {
   @Get()
+  @HttpCode(HttpStatus.ACCEPTED)
   getProducts(
     @Query('limit') limit = 100,
     @Query('offset') offset = 0,
@@ -23,10 +29,13 @@ export class ProductsController {
   }
 
   @Get('filter')
-  getProductFilter() {
-    return {
+  getProductFilter(@Res() response: Response) {
+    /*
+    No es recomendable devolver con express, es mejor hacerlo como en el metodo getProducts
+    */
+    return response.status(200).send({
       message: 'yo soy un filter',
-    };
+    });
   }
 
   @Get(':productId')
