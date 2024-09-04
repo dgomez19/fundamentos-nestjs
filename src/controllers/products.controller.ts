@@ -14,8 +14,12 @@ import {
 
 import { Response } from 'express';
 
+import { ProductsService } from './../services/products.service';
+
 @Controller('products')
 export class ProductsController {
+  constructor(private productsService: ProductsService) {}
+
   @Get()
   @HttpCode(HttpStatus.ACCEPTED)
   getProducts(
@@ -23,9 +27,10 @@ export class ProductsController {
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
-    return {
-      message: `products limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
-    };
+    return this.productsService.findAll();
+    // return {
+    //   message: `products limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
+    // };
   }
 
   @Get('filter')
@@ -40,26 +45,29 @@ export class ProductsController {
 
   @Get(':productId')
   getProduct(@Param('productId') productId: string) {
-    return {
-      message: `product ${productId}`,
-    };
+    return this.productsService.findOne(+productId);
+    // return {
+    //   message: `product ${productId}`,
+    // };
   }
 
   @Post()
   create(@Body() payload: any) {
-    return {
-      message: 'Acción de crear',
-      payload,
-    };
+    return this.productsService.create(payload);
+    // return {
+    //   message: 'Acción de crear',
+    //   payload,
+    // };
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() payload: any) {
-    return {
-      message: 'Accion de editar',
-      id,
-      payload,
-    };
+  update(@Param('id') id: string, @Body() payload: any) {
+    this.productsService.update(+id, payload);
+    // return {
+    //   message: 'Accion de editar',
+    //   id,
+    //   payload,
+    // };
   }
 
   @Delete(':id')
