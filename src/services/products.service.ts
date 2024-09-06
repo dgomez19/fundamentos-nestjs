@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { Product } from './../entities/product.entity';
 
@@ -22,7 +22,15 @@ export class ProductsService {
   }
 
   findOne(id: number) {
-    return this.products.find((item) => item.id === id);
+    const product = this.products.find((item) => item.id === id);
+    if (!product) {
+      // throw 'SOY UN ERROR'; Imprimir un error en la consola
+      throw new NotFoundException(
+        `No se encontró información del producto con id #${id}`,
+      );
+    }
+
+    return product;
   }
 
   create(payload: any) {
@@ -39,14 +47,10 @@ export class ProductsService {
   update(id: number, payload: any) {
     const product = this.findOne(id);
 
-    if (!product) {
-      return null;
-    }
-
     const index = this.products.findIndex((item) => item.id === id);
 
     this.products[index] = {
-      ...product,
+      product,
       ...payload,
     };
 

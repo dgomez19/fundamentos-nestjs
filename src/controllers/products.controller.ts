@@ -10,11 +10,14 @@ import {
   HttpStatus,
   HttpCode,
   Res,
+  ParseIntPipe, // Pipe que viene por defecto en NestJS
 } from '@nestjs/common';
 
 import { Response } from 'express';
 
 import { ProductsService } from './../services/products.service';
+
+// import { ParseIntPipe } from './../common/parse-int.pipe'; // Pipe creado manualmente
 
 @Controller('products')
 export class ProductsController {
@@ -44,7 +47,7 @@ export class ProductsController {
   }
 
   @Get(':productId')
-  getProduct(@Param('productId') productId: string) {
+  getProduct(@Param('productId', ParseIntPipe) productId: string) {
     return this.productsService.findOne(+productId);
     // return {
     //   message: `product ${productId}`,
