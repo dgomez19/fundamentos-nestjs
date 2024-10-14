@@ -17,6 +17,8 @@ import { Response } from 'express';
 
 import { ProductsService } from './../services/products.service';
 
+import { CreateProductDto, UpdateProductDto } from './../dtos/products.dtos';
+
 // import { ParseIntPipe } from './../common/parse-int.pipe'; // Pipe creado manualmente
 
 @Controller('products')
@@ -55,7 +57,8 @@ export class ProductsController {
   }
 
   @Post()
-  create(@Body() payload: any) {
+  create(@Body() payload: CreateProductDto) {
+    console.log(payload);
     return this.productsService.create(payload);
     // return {
     //   message: 'Acción de crear',
@@ -64,8 +67,8 @@ export class ProductsController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() payload: any) {
-    this.productsService.update(+id, payload);
+  update(@Param('id') id: string, @Body() payload: UpdateProductDto) {
+    return this.productsService.update(+id, payload);
     // return {
     //   message: 'Accion de editar',
     //   id,
